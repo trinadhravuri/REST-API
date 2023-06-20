@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework.views import APIView
+from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -54,3 +55,41 @@ class HelloApiView(APIView):
     def delete(self,request,pk=None):
         """Deleting an object """
         return Response({'method':'DELETE'})
+    
+class HelloViewset(viewsets.ViewSet):
+    serializer_class = serializers.HelloSerializer
+    """ Test API Viewsets """
+    def list(self,request):
+        """ return a hello message: this is like get method """
+        a_viewset = ['usees actions (list,create,retrieve,update,patial_update and delte)',
+                     'Automatically maps to urls using routers',
+                     'Provides more functionality with less code']  
+        return Response({'message':'Hello..!','a_viewset':a_viewset})
+
+    def create(self,request):
+        """ Create a heloo message using VIEWSETS """
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            name = serializer.validated_data.get('name')
+            desig = serializer.validated_data.get('desig')
+            message = f"Hello {name}..!, and i am a {desig}"
+            return Response({'message':message})  
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    def retrieve(self, request, pk=None):
+        """ retreving a particular object by ID """
+        return Response({'http_method':'GET'})
+    
+    def update(self, request,pk = None):
+        """ Hnadle update the value using PUT """
+        return Response({'http_method':'PUT'})
+    
+    def partial_update(self, request,pk = None):
+        """ Hnadle partial update the value using PATCH """
+        return Response({'http_method':'PATCH'})
+    
+    def destroy(self, request,pk = None):
+        """ delete the value using DELETE """
+        return Response({'http_method':'DELETE'})
+    
