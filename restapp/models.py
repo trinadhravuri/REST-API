@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
-
+from django.conf import settings
 # Create your models here.
 
 class UserProfileManager(BaseUserManager):
@@ -49,3 +49,33 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     def get_name(self):
         """ retrieving the name of User """
         return self.name
+    
+
+
+
+class ProfileFeedItem(models.Model):
+    """ profile status update """
+    user_profile = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    status_text = models.CharField(max_length=200)
+    created_on = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        """returning from object name to meaningful object to understand"""
+        return self.status_text
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
